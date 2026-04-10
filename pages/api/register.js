@@ -66,16 +66,6 @@ const buildHtml = (payload) => {
     </div>
   `;
 };
-        </div>
-
-        <div style="padding: 22px 24px 28px; text-align: center; background: #f8fafc; color: #64748b; font-size: 13px;">
-          <p style="margin: 0;">Hilton Istanbul Bosphorus · Küresel Liderlik Zirvesi 2026</p>
-          <p style="margin: 8px 0 0;">© 2026 Etkinlik Bilgisayar. Tüm hakları saklıdır.</p>
-        </div>
-      </div>
-    </div>
-  `;
-};
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {

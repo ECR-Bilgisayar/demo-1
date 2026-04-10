@@ -1,4 +1,4 @@
-const sgMail = require("@sendgrid/mail");
+import sgMail from "@sendgrid/mail";
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || "no-reply@etkinlikbilgisayar.com";
@@ -67,7 +67,7 @@ const buildHtml = (payload) => {
   `;
 };
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Sadece POST isteğine izin verilir." });
   }
