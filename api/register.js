@@ -102,3 +102,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "E-posta gönderilirken bir hata oluştu." });
   }
 }
+//yorum satırı
