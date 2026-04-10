@@ -1,4 +1,4 @@
-import sgMail from "@sendgrid/mail";
+const sgMail = require("@sendgrid/mail");
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || "no-reply@etkinlikbilgisayar.com";
@@ -7,7 +7,7 @@ const BCC_EMAIL = "info@etkinlikbilgisayar.com";
 // Base URL for email assets (should be the deployed site's URL)
 const BASE_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:5173";
 
-const buildHtml = (payload: any) => {
+const buildHtml = (payload) => {
   const { name, email, phone, company, message } = payload;
 
   return `
@@ -77,7 +77,7 @@ const buildHtml = (payload: any) => {
   `;
 };
 
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Sadece POST isteğine izin verilir." });
   }
@@ -95,7 +95,7 @@ export default async function handler(req: any, res: any) {
 
   sgMail.setApiKey(SENDGRID_API_KEY);
 
-  const mailPayload: any = {
+  const mailPayload = {
     to: email,
     from: SENDGRID_FROM_EMAIL,
     bcc: [{ email: BCC_EMAIL }],
@@ -107,8 +107,9 @@ export default async function handler(req: any, res: any) {
   try {
     await sgMail.send(mailPayload);
     return res.status(200).json({ ok: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("SendGrid error:", error?.response?.body || error);
     return res.status(500).json({ error: "E-posta gönderilirken bir hata oluştu." });
   }
+}
 }
