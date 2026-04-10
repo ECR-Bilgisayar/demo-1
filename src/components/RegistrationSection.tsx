@@ -1,19 +1,72 @@
-import { useState, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import SectionReveal from "./SectionReveal";
 import { toast } from "sonner";
 
 const RegistrationSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+    agreed: false,
+  });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((current) => ({
+      ...current,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formData.agreed) {
+      toast.error("Lütfen koşulları kabul edin.");
+      return;
+    }
+
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Bir hata oluştu.");
+      }
+
+      toast.success("Başvurunuz alındı. Onay e-postası gönderildi.");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: "",
+        agreed: false,
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || "E-posta gönderilirken bir hata oluştu.");
+    } finally {
       setIsSubmitting(false);
-      toast.success("Başvuru başarıyla gönderildi. Kısa süre içinde sizinle iletişime geçeceğiz.");
-      (e.target as HTMLFormElement).reset();
-    }, 1500);
+    }
   };
 
   const inputClasses =
@@ -45,9 +98,12 @@ const RegistrationSection = () => {
                     Ad Soyad *
                   </label>
                   <input
+                    name="name"
                     type="text"
                     required
                     placeholder="Ahmet Yılmaz"
+                    value={formData.name}
+                    onChange={handleChange}
                     className={inputClasses}
                     maxLength={100}
                   />
@@ -57,9 +113,12 @@ const RegistrationSection = () => {
                     E-posta Adresi *
                   </label>
                   <input
+                    name="email"
                     type="email"
                     required
                     placeholder="ahmet@sirket.com"
+                    value={formData.email}
+                    onChange={handleChange}
                     className={inputClasses}
                     maxLength={255}
                   />
@@ -72,8 +131,11 @@ const RegistrationSection = () => {
                     Telefon Numarası
                   </label>
                   <input
+                    name="phone"
                     type="tel"
                     placeholder="+90 (555) 000-0000"
+                    value={formData.phone}
+                    onChange={handleChange}
                     className={inputClasses}
                     maxLength={20}
                   />
@@ -83,9 +145,12 @@ const RegistrationSection = () => {
                     Şirket / Ünvan *
                   </label>
                   <input
+                    name="company"
                     type="text"
                     required
                     placeholder="CEO, ABC Şirketi"
+                    value={formData.company}
+                    onChange={handleChange}
                     className={inputClasses}
                     maxLength={150}
                   />
@@ -97,9 +162,12 @@ const RegistrationSection = () => {
                   Neden katılmak istiyorsunuz? *
                 </label>
                 <textarea
+                  name="message"
                   required
                   rows={4}
                   placeholder="Hedeflerinizden ve zirveden ne kazanmayı umduğunuzdan bahsedin..."
+                  value={formData.message}
+                  onChange={handleChange}
                   className={`${inputClasses} resize-none border rounded-lg border-border p-4`}
                   maxLength={1000}
                 />
@@ -107,8 +175,10 @@ const RegistrationSection = () => {
 
               <label className="flex items-start gap-3 cursor-pointer group">
                 <input
+                  name="agreed"
                   type="checkbox"
-                  required
+                  checked={formData.agreed}
+                  onChange={handleChange}
                   className="mt-1 w-4 h-4 rounded border-border accent-navy"
                 />
                 <span className="text-muted-foreground font-body text-sm font-light leading-relaxed">
@@ -119,7 +189,7 @@ const RegistrationSection = () => {
               <div className="text-center pt-4">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !formData.agreed}
                   className="inline-block bg-navy hover:bg-navy-light text-primary-foreground font-body font-semibold text-sm tracking-wider uppercase px-14 py-4 rounded transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Gönderiliyor..." : "Başvuru Gönder"}
