@@ -54,18 +54,18 @@ const buildHtml = (payload) => {
             </table>
           </div>
 
-          <div style="margin-top: 24px; padding: 24px; border-radius: 20px; background: #ffffff; border: 1px solid #e2e8f0;">
+          <div style="text-align: center; margin: 24px 0;">
+            <p style="margin: 0 0 12px; font-size: 13px; color: #64748b; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Etkinlik QR Kodu</p>
+            <img src="${BASE_URL}/email-assets/qr-static.png" alt="Etkinlik QR Kodu" width="160" style="display: inline-block; height: auto; border-radius: 12px; border: 1px solid #e2e8f0;" />
+          </div>
+
+          <div style="padding: 24px; border-radius: 20px; background: #ffffff; border: 1px solid #e2e8f0;">
             <p style="margin: 0 0 10px; font-weight: 700; color: #0f172a;">Mesajınız</p>
             <p style="margin: 0; color: #475569; line-height: 1.7;">${message}</p>
           </div>
 
           <div style="text-align: center; margin: 32px 0 0;">
             <img src="${BASE_URL}/email-assets/Email-body-stars.jpg" alt="Stars" style="max-width: 100%; height: auto; border-radius: 18px;" />
-          </div>
-
-          <div style="text-align: center; margin: 28px 0 0;">
-            <p style="margin: 0 0 12px; font-size: 13px; color: #64748b; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Etkinlik QR Kodu</p>
-            <img src="${BASE_URL}/email-assets/qr-static.png" alt="Etkinlik QR Kodu" width="160" style="display: inline-block; height: auto; border-radius: 12px; border: 1px solid #e2e8f0;" />
           </div>
         </div>
 
