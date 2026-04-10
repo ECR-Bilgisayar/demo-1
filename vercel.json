@@ -7,10 +7,6 @@
       "config": {
         "distDir": "dist"
       }
-    },
-    {
-      "src": "api/register.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -22,5 +18,10 @@
       "src": "/(.*)",
       "dest": "/dist/$1"
     }
-  ]
+  ],
+  "functions": {
+    "api/register.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }
