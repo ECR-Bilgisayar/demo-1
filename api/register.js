@@ -4,8 +4,14 @@ const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || "no-reply@etkinlikbilgisayar.com";
 const BCC_EMAIL = "info@etkinlikbilgisayar.com";
 
-// Base URL for email assets (should be the deployed site's URL)
-const BASE_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:5173";
+// Base URL for email assets — use stable production URL, not the per-deployment VERCEL_URL
+const BASE_URL =
+  process.env.SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:5173");
 
 const buildHtml = (payload) => {
   const { name, email, phone, company, message } = payload;
